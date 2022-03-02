@@ -73,6 +73,7 @@ const registerWithEmailAndPassword = async (name, email, password) => {
       email,
       onlineState:true
     });
+    
     localStorage.setItem("accessToken", user?.accessToken)
   } catch (err) {
     console.error(err);
