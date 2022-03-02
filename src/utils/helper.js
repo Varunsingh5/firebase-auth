@@ -1,4 +1,4 @@
-export const getStatusColor = (status)=>{
+export const getStatusColor = (status) => {
     // let colorObj = {
     //     Available :"green",
     //     Busy:"pink",
@@ -8,24 +8,24 @@ export const getStatusColor = (status)=>{
     // const color = colorObj[status];
     // return color;
 
-// const status = status;
+    // const status = status;
 
-   let color = "white";
+    let color = "white";
     switch (status) {
         case "Available":
-            color="Green";
+            color = "Green";
             break;
 
-            case "Busy":
-                color="Pink";
+        case "Busy":
+            color = "Pink";
             break;
 
-            case "Away":
-                color="Yellow";
+        case "Away":
+            color = "Yellow";
             break;
-    
+
         default:
-            color="white";
+            color = "white";
             break;
     }
     return color;
