@@ -40,8 +40,7 @@ function Register() {
   return (
     <div className="register">
       <div className="register__container">
-        <input
-          type="text"
+        <input type="text"
           className="register__textBox"
           value={name}
           onChange={(e) => setName(e.target.value)}

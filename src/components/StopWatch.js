@@ -91,7 +91,7 @@ const Stopwatch = (props) => {
 
 			if (docSnap.exists()) {
 				const newdata = docSnap.data().timeLogs;
-				newdata.push({ startTime: startTime, endTime: new Date(),status:props?.status })
+				newdata.push({ startTime: startTime, endTime: new Date(), status: props?.status })
 				await updateDoc(docRef, {
 					timeLogs: newdata
 				});
@@ -99,7 +99,7 @@ const Stopwatch = (props) => {
 			} else {
 				const docData = {
 					updateTime: Timestamp.fromDate(new Date()),
-					timeLogs: [{ startTime: startTime, endTime: new Date(),status:props?.status }],
+					timeLogs: [{ startTime: startTime, endTime: new Date(), status: props?.status }],
 				};
 				setDoc(doc(db, "data", props?.user?.uid), docData);
 			}
@@ -177,7 +177,7 @@ const Stopwatch = (props) => {
 				<Grid item style={{ color: 'aquamarine' }}>{laps.lapsList.length > 0 && <Laps laps={laps} />}</Grid>
 			</Grid>
 			<div style={{ marginTop: '35px', marginLeft: '75px' }}>
-				<input placeholder="Online" onChange={onChange} style={{ fontSize: '20px', width: '60%',backgroundColor: 'black', color: 'white', border: '0px' }} />
+				<input placeholder="Online" onChange={onChange} style={{ fontSize: '20px', width: '60%', backgroundColor: 'black', color: 'white', border: '0px' }} />
 			</div>
 		</div>
 	);

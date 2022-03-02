@@ -17,8 +17,7 @@ function Reset() {
   return (
     <div className="reset">
       <div className="reset__container">
-        <input
-          type="text"
+        <input type="text"
           className="reset__textBox"
           value={email}
           onChange={(e) => setEmail(e.target.value)}

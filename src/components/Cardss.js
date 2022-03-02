@@ -8,6 +8,7 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import DatePicker from 'react-multi-date-picker';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
+import Grid from '@material-ui/core/Grid';
 import { getStatusColor } from '../utils/helper';
 
 const Cardss = (props) => {
@@ -58,7 +59,6 @@ const Cardss = (props) => {
             const awayFilterData = filterData?.filter((i, x) => i?.status == "Away")
             const awayTime = await addTimes(awayFilterData)
 
-
             //state state
             setTime(filterData)
             setTotalHours(totalTime)
@@ -72,7 +72,6 @@ const Cardss = (props) => {
             getDocFromFirebase()
     }, [user, values])
 
-
     const onchangedate = (selectedDate) => {
         const dateFormatted = moment(selectedDate?.unix * 1000);
         setValues(new Date(dateFormatted))
@@ -84,18 +83,18 @@ const Cardss = (props) => {
         )
     }
 
-
     return (
         <div>
 
-            < div className="card1" >
+            <div className="card1" >
                 <Link to="/Dashboard" >
                     <button style={{
                         marginLeft: '94%', fontSize: '20px', marginTop: '5px',
                         backgroundColor: 'black', color: 'white', borderColor: "black"
                     }} > Back</button>
                 </Link>
-                <div className="date" style={{ paddingTop: '50px', marginLeft: "35%" }}>
+
+                <div className="date" style={{ paddingTop: '50px', marginLeft: "40%" }}>
                     <DatePicker
                         multiple={false}
                         value={values}
@@ -106,14 +105,13 @@ const Cardss = (props) => {
                 </div>
             </div>
 
-
-            <div className='cards' style={{ marginTop: '4%', display: 'flex', marginLeft: '20%', }}>
+            <div className='cards' style={{ marginTop: '4%', display: 'flex', marginLeft: '25%', }}>
                 <Card style={{ backgroundColor: "blanchedalmond" }}>
                     <CardContent  >
-                        <Typography color="textSecondary" gutterBottom style={{ padding: '20px 16px 0px 4px', color: 'black' }}>
+                        <Typography color="textSecondary" gutterBottom style={{ color: 'black' }}>
                             Online Hours
                         </Typography>
-                        <Typography color="textSecondary" gutterBottom style={{ padding: '16px 15px 0px 15px', color: 'black' }}>
+                        <Typography color="textSecondary" gutterBottom style={{ color: 'black', marginLeft: "11px" }}>
                             {totalHours}
                         </Typography>
                     </CardContent>
@@ -121,11 +119,11 @@ const Cardss = (props) => {
                 <Card style={{ marginLeft: '5%', backgroundColor: 'blanchedalmond' }}  >
                     <CardContent  >
 
-                        <Typography color="textSecondary" gutterBottom style={{ padding: '24px 18px 12px 11px', display: "flex", color: 'black' }}>
+                        <Typography color="textSecondary" gutterBottom style={{ display: "flex", color: 'black' }}>
                             {renderStatusDot("green")} <span style={{ marginLeft: "4px" }}> Available </span>
                         </Typography>
 
-                        <Typography color="textSecondary" gutterBottom style={{ padding: '1px 13px 10px 18px', color: 'black' }}>
+                        <Typography color="textSecondary" gutterBottom style={{ marginLeft: "10px", color: 'black' }}>
                             {availableHours}
                         </Typography>
 
@@ -133,66 +131,89 @@ const Cardss = (props) => {
                 </Card>
                 <Card style={{ marginLeft: '5%', backgroundColor: 'blanchedalmond' }}  >
                     <CardContent   >
-                        <Typography color="textSecondary" gutterBottom style={{ padding: '24px 35px 12px 28px', display: "flex", color: 'black' }}>
+                        <Typography color="textSecondary" gutterBottom style={{ display: "flex", color: 'black', }}>
                             {renderStatusDot("pink")}  <span style={{ marginLeft: "4px" }}> Busy </span>
                         </Typography>
-                        <Typography color="textSecondary" gutterBottom style={{ padding: '0px 30px 15px 28px', color: 'black' }}>
+                        <Typography color="textSecondary" gutterBottom style={{ color: 'black',marginLeft:"10px" }}>
                             {busyHours}
                         </Typography>
                     </CardContent>
                 </Card>
                 <Card style={{ marginLeft: '5%', backgroundColor: 'blanchedalmond' }}  >
                     <CardContent>
-                        <Typography color="textSecondary" gutterBottom style={{ padding: '24px 35px 12px 28px', color: 'black', display: "flex" }}>
+                        <Typography color="textSecondary" gutterBottom style={{ color: 'black', display: "flex" }}>
                             {renderStatusDot("Yellow")}   <span style={{ marginLeft: "4px" }}> Away </span>
                         </Typography>
-                        <Typography color="textSecondary" gutterBottom style={{ padding: '0px 0px 0px 30px', color: 'black' }}>
+                        <Typography color="textSecondary" gutterBottom style={{ color: 'black' }}>
                             {awayHours}
                         </Typography>
                     </CardContent>
                 </Card>
             </div>
 
-
-
-            <div className='cardss' style={{ width: '70%', marginTop: '30px', marginLeft: '12%' }}>
+            <div className='cardss' style={{ width: '55%', marginTop: '30px', marginLeft: '20%' }}>
                 <Card >
+
                     <CardContent style={{ display: 'flex', backgroundColor: "darkkhaki" }}>
-                        <Typography color="textSecondary" gutterBottom style={{ marginLeft: '10%', color: 'black' }}>
-                            Time
-                        </Typography>
-                        <Typography color="textSecondary" gutterBottom style={{ marginLeft: '58%', color: 'black' }}>
-                            Status
-                        </Typography>
-                        <Typography color="textSecondary" gutterBottom style={{ marginLeft: '10%', color: 'black' }}>
-                            Duration
-                        </Typography>
+                        <Grid item xs={4}>
+                            <Typography color="textSecondary" gutterBottom style={{ marginLeft: '30%', color: 'black' }}>
+                                Time
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={4}>
+                            <Typography color="textSecondary" gutterBottom style={{ marginLeft: '45%', color: 'black' }}>
+                                Status
+                            </Typography>
+                        </Grid>
+
+                        <Grid item xs={4}>
+                            <Typography color="textSecondary" gutterBottom style={{ marginLeft: '8%', color: 'black' }}>
+                                Duration
+                            </Typography>
+                        </Grid>
                     </CardContent>
+
                     {time?.length > 0 &&
                         time?.map((i, x) => {
                             return (
                                 <CardContent style={{ display: 'flex', backgroundColor: "beige" }}>
-                                    <Typography color="textSecondary" gutterBottom style={{ marginLeft: '5%', color: 'black', }}>
-                                        {moment(i?.startTime?.seconds * 1000).local().format("hh:mm A") + " - " + moment(i?.endTime?.seconds * 1000).format("hh:mm A")}
-                                        {/* {new Date(i?.startTime?.seconds * 1000).toLocaleString()}-{new Date(i?.endTime?.seconds * 1000).toUTCString()} */}
-                                    </Typography>
-                                    <Typography color="textSecondary" gutterBottom style={{ marginLeft: '50%', display: "flex", color: 'black' }}>
-                                        {renderStatusDot(getStatusColor(i?.status))}  &nbsp; {i?.status}
-                                    </Typography>
-                                    <Typography color="textSecondary" gutterBottom style={{ marginLeft: '10%', color: 'black' }}>
-                                        {convertHMS(moment(i?.endTime?.seconds * 1000).diff(moment(i?.startTime?.seconds * 1000), 'seconds'))}
-                                    </Typography>
+                                    <Grid item xs={4}>
+                                        <Typography color="textSecondary" gutterBottom style={{ marginLeft: '5%', color: 'black', }}>
+                                            {moment(i?.startTime?.seconds * 1000).local().format("hh:mm A") + " - " + moment(i?.endTime?.seconds * 1000).format("hh:mm A")}
+                                            {/* {new Date(i?.startTime?.seconds * 1000).toLocaleString()}-{new Date(i?.endTime?.seconds * 1000).toUTCString()} */}
+                                        </Typography>
+                                    </Grid>
+
+                                    <Grid item xs={4}>
+                                        <Typography color="textSecondary" gutterBottom style={{ marginLeft: '38%', display: "flex", color: 'black' }}>
+                                            {renderStatusDot(getStatusColor(i?.status))}   &nbsp;  {i?.status}
+                                        </Typography>
+                                    </Grid>
+
+                                    <Grid item xs={4}>
+                                        <Typography color="textSecondary" gutterBottom style={{ marginLeft: '10%', color: 'black' }}>
+                                            {convertHMS(moment(i?.endTime?.seconds * 1000).diff(moment(i?.startTime?.seconds * 1000), 'seconds'))}
+                                        </Typography>
+                                    </Grid>
+
                                 </CardContent>
                             )
                         })
                     }
                     <CardContent style={{ backgroundColor: "beige", display: "flex" }}>
-                        <Typography color="textSecondary" gutterBottom style={{ marginLeft: '70%', color: "black" }}>
-                            Total Hours:
+                        <Grid item xs={4}>
+                        </Grid>
 
-                            <span style={{ marginLeft: "92px" }}>  {totalHours} </span>
+                        <Grid item xs={4}>
+                            <Typography color="textSecondary" gutterBottom style={{ color: "black", marginLeft: "50%" }}>
+                                Total Hours
+                            </Typography>
+                        </Grid>
 
-                        </Typography>
+                        <Grid item xs={4} style={{ marginLeft: "10%" }}>
+                            {totalHours}
+                        </Grid>
+
                     </CardContent>
                 </Card>
             </div>

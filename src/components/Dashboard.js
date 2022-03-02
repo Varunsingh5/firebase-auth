@@ -28,7 +28,6 @@ function Dashboard() {
       console.error(err);
     }
   };
-
   const setInputValue = (value) => {
     setOnlinevalue(value)
   }
@@ -46,8 +45,6 @@ function Dashboard() {
   }, []);
   console.log(user);
 
-  
-
   return (
     <div style={{ flexDirection: "row", display: "flex" }}>
       <div style={{ background: 'black', color: 'white', width: "20%", height: '100vh' }}>
@@ -55,7 +52,7 @@ function Dashboard() {
           <Avatar>{name.substring(0, 1).toUpperCase()}</Avatar>
           <div style={{ marginLeft: '10px', marginTop: '10px' }}>
             {name}
-            <div style={{}}>
+            <div>
               <select name="status" className="status">
                 <option value="Available" > Available</option>
                 <option value="Away" > Away</option>
@@ -72,15 +69,17 @@ function Dashboard() {
             position: "absolute", left: 60, top: 80
           }} />
         </div>
+
         <StopWatch user={user} setInputValue={(e) => setInputValue(e)} status={status} />
+
         <div className="dashboard__container" style={{ marginTop: '40px' }}>
           Logged in as
           <div style={{ marginTop: '15px' }}>{name}</div>
           <div >{user?.email}</div>
         </div>
       </div>
-      <div className="dash1" style={{ width: "80%", height: "100vh",backgroundSize:"cover", backgroundImage: 'url("https://img.freepik.com/free-photo/flat-lay-desk-arrangement-with-copy-space_23-2148928165.jpg?size=626&ext=jpg")', }}>
-        < Dashboard1 onlinevalue={onlinevalue} />
+      <div className="dash1" style={{ width: "80%", height: "100vh", backgroundSize: "cover", backgroundImage: 'url("https://img.freepik.com/free-photo/flat-lay-desk-arrangement-with-copy-space_23-2148928165.jpg?size=626&ext=jpg")', }}>
+        <Dashboard1 onlinevalue={onlinevalue} />
       </div>
     </div>
   );
