@@ -33,6 +33,7 @@ const db = getFirestore(app);
 const googleProvider = new GoogleAuthProvider();
 
 const signInWithGoogle = async () => {
+
   try {
     const res = await signInWithPopup(auth, googleProvider);
     const user = res.user;
@@ -53,45 +54,55 @@ const signInWithGoogle = async () => {
   }
 };
 
-const logInWithEmailAndPassword = async (email, password) => {
+const logInWithEmailAndPassword = async (email, password, navigate) => {
   try {
-    await signInWithEmailAndPassword(auth, email, password);
+    await signInWithEmailAndPassword(auth, email, password).then(e => {
+      localStorage.setItem('isAuth', 'true')
+      localStorage.setItem('user', JSON.stringify(e?.user))
+      navigate('/dashboard')
+    }).catch(err => console.log("signin eror", err))
   } catch (err) {
     console.error(err);
     alert(err.message);
   }
 };
-const registerWithEmailAndPassword = async (name, email, password) => {
+const registerWithEmailAndPassword = async (name, email, password, navigate) => {
   try {
-    const res = await createUserWithEmailAndPassword(auth, email, password);
-    console.log("response======>>>>>>>>>>>>>.", res);
-    const user = res.user;
-    await addDoc(collection(db, "users"), {
-      uid: user.uid,
-      name,
-      authProvider: "local",
-      email,
-      onlineState: true
-    });
+    const res = await createUserWithEmailAndPassword(auth, email, password).then(async (e) => {
+      localStorage.setItem('isAuth', 'true')
+      localStorage.setItem('user', JSON.stringify(e?.user))
+      const user = e?.user;
+      await addDoc(collection(db, "users"), {
+        uid: user.uid,
+        name,
+        authProvider: "local",
+        email,
+        onlineState: ""
+      });
+      navigate('/dashboard')
+    }).catch(err => console.log("signup eror", err))
+  } catch (err) {
+    console.error(err);
+    alert(err.message);
+  }
+};
+const sendPasswordReset = async (email, navigate) => {
+  try {
+    await sendPasswordResetEmail(auth, email).then(e => {
+      alert("Password reset link sent!");
+      navigate('/login')
+    }).catch(err => console.log("rest error", err))
 
-    localStorage.setItem("accessToken", user?.accessToken)
-  } catch (err) {
-    console.error(err);
-    alert(err.message);
-  }
-};
-const sendPasswordReset = async (email) => {
-  try {
-    await sendPasswordResetEmail(auth, email);
-    alert("Password reset link sent!");
   } catch (err) {
     console.error(err);
     alert(err.message);
   }
 };
 const logout = () => {
-  signOut(auth);
-  localStorage.clear()
+  return signOut(auth).then(e => {
+    localStorage.clear()
+  }).catch(err => console.log("signout error", err))
+
 };
 export {
   auth,

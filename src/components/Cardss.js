@@ -12,7 +12,7 @@ import Grid from '@material-ui/core/Grid';
 import { getStatusColor } from '../utils/helper';
 
 const Cardss = (props) => {
-    const [user, loading] = useAuthState(auth);
+    const [user, setUser] = useState(null)
     const [time, setTime] = useState([])
     const today = new Date();
     const [values, setValues] = useState(today)
@@ -38,7 +38,7 @@ const Cardss = (props) => {
         const convertTime = convertHMS(duration)
         return convertTime;
     }
-    const getDocFromFirebase = async () => {
+    const getDocFromFirebase = async (user) => {
         const docRef = doc(db, "data", user.uid);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
@@ -67,10 +67,18 @@ const Cardss = (props) => {
             setAwayHours(awayTime)
         }
     }
+    const setUserDeatils = async () => {
+        const usr = await localStorage.getItem('user');
+        console.log("asfsfis", usr);
+        setUser(JSON.parse(usr));
+        await getDocFromFirebase(JSON.parse(usr))
+    }
     useEffect(() => {
-        if (user?.uid)
-            getDocFromFirebase()
-    }, [user, values])
+        console.log("sjjhsdsdjhfsdjhfvsdgvg==========");
+        setUserDeatils()
+        return () => null
+
+    }, [values])
 
     const onchangedate = (selectedDate) => {
         const dateFormatted = moment(selectedDate?.unix * 1000);
@@ -89,7 +97,7 @@ const Cardss = (props) => {
             <div className="card1" >
                 <Link to="/Dashboard" >
                     <button style={{
-                        marginLeft: '94%', fontSize: '20px', marginTop: '5px',
+                        fontSize: '20px', marginTop: "3px", marginLeft: "4px",
                         backgroundColor: 'black', color: 'white', borderColor: "black"
                     }} > Back</button>
                 </Link>
@@ -100,23 +108,28 @@ const Cardss = (props) => {
                         value={values}
                         maxDate={new Date()}
                         onChange={onchangedate}
-                    //   onChange={(e)=>console.log("nkjjhvjhc",e)}
-                    />
+                        //   onChange={(e)=>console.log("nkjjhvjhc",e)}
+                        style={{ textAlign: "center" }} />
                 </div>
             </div>
 
             <div className='cards' style={{ marginTop: '4%', display: 'flex', marginLeft: '25%', }}>
                 <Card style={{ backgroundColor: "blanchedalmond" }}>
                     <CardContent  >
+
                         <Typography color="textSecondary" gutterBottom style={{ color: 'black' }}>
                             Online Hours
                         </Typography>
+
                         <Typography color="textSecondary" gutterBottom style={{ color: 'black', marginLeft: "11px" }}>
                             {totalHours}
                         </Typography>
+
                     </CardContent>
                 </Card>
-                <Card style={{ marginLeft: '5%', backgroundColor: 'blanchedalmond' }}  >
+
+                <Card style={{ marginLeft: '3%', backgroundColor: 'blanchedalmond' }}  >
+
                     <CardContent  >
 
                         <Typography color="textSecondary" gutterBottom style={{ display: "flex", color: 'black' }}>
@@ -128,25 +141,35 @@ const Cardss = (props) => {
                         </Typography>
 
                     </CardContent>
+
                 </Card>
+
                 <Card style={{ marginLeft: '5%', backgroundColor: 'blanchedalmond' }}  >
                     <CardContent   >
+
                         <Typography color="textSecondary" gutterBottom style={{ display: "flex", color: 'black', }}>
                             {renderStatusDot("pink")}  <span style={{ marginLeft: "4px" }}> Busy </span>
                         </Typography>
-                        <Typography color="textSecondary" gutterBottom style={{ color: 'black',marginLeft:"10px" }}>
+
+                        <Typography color="textSecondary" gutterBottom style={{ color: 'black', marginLeft: "10px" }}>
                             {busyHours}
                         </Typography>
+
                     </CardContent>
                 </Card>
+
                 <Card style={{ marginLeft: '5%', backgroundColor: 'blanchedalmond' }}  >
+
                     <CardContent>
+
                         <Typography color="textSecondary" gutterBottom style={{ color: 'black', display: "flex" }}>
                             {renderStatusDot("Yellow")}   <span style={{ marginLeft: "4px" }}> Away </span>
                         </Typography>
+
                         <Typography color="textSecondary" gutterBottom style={{ color: 'black' }}>
                             {awayHours}
                         </Typography>
+
                     </CardContent>
                 </Card>
             </div>
@@ -155,11 +178,13 @@ const Cardss = (props) => {
                 <Card >
 
                     <CardContent style={{ display: 'flex', backgroundColor: "darkkhaki" }}>
+
                         <Grid item xs={4}>
                             <Typography color="textSecondary" gutterBottom style={{ marginLeft: '30%', color: 'black' }}>
                                 Time
                             </Typography>
                         </Grid>
+
                         <Grid item xs={4}>
                             <Typography color="textSecondary" gutterBottom style={{ marginLeft: '45%', color: 'black' }}>
                                 Status
@@ -177,6 +202,7 @@ const Cardss = (props) => {
                         time?.map((i, x) => {
                             return (
                                 <CardContent style={{ display: 'flex', backgroundColor: "beige" }}>
+
                                     <Grid item xs={4}>
                                         <Typography color="textSecondary" gutterBottom style={{ marginLeft: '5%', color: 'black', }}>
                                             {moment(i?.startTime?.seconds * 1000).local().format("hh:mm A") + " - " + moment(i?.endTime?.seconds * 1000).format("hh:mm A")}

@@ -1,10 +1,10 @@
 
 import React, { useState, useRef, useEffect } from "react";
-import { doc, getDoc, setDoc, Timestamp, updateDoc } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, query, setDoc, Timestamp, updateDoc, where } from "firebase/firestore";
 import { db } from "./firebase";
 import {
-	Box, Typography, IconButton, Grid, makeStyles, Table, TableHead, TableRow, TableCell,
-	TableContainer, TableBody, Paper, Tooltip
+	Box, Typography, IconButton, Grid, makeStyles, Table,
+	TableHead, TableRow, TableCell, TableContainer, TableBody, Paper, Tooltip
 } from "@material-ui/core";
 import PlayCircleFilledIcon from "@material-ui/icons/PlayCircleFilled";
 import PauseCircleFilledIcon from "@material-ui/icons/PauseCircleFilled";
@@ -59,17 +59,37 @@ const Stopwatch = (props) => {
 	const intervalRef = useRef(0);
 	const [startTime, setStartTime] = useState(null);
 
-	const onChange = (event) => {
+	const updateUserDoc = (newValue) => {
+		setTimeout(async () => {
+			const docRef = query(collection(db, "users"), where("uid", "==", props?.user?.uid));
+			const docSnap = await getDocs(docRef);
+			const data = docSnap.docs[0].data();
+			if (data) {
+				const docRef1 = doc(db, "users", docSnap.docs[0].id);
+				const docSnap1 = await getDoc(docRef1);
+				if (docSnap1.exists()) {
+					await updateDoc(docRef1, {
+						onlineState: newValue
+					});
+				}
+			}
+		}, 2000);
+	}
+	const onChange = async (event) => {
 		const newValue = event.target.value;
+		localStorage.setItem("person", newValue)
 		props.setInputValue(newValue)
+		updateUserDoc(newValue)
 	};
+
+
 	const formatTime = () => {
 		const sec = `${Math.floor(time) % 60}`.padStart(2, "0");
 		const min = `${Math.floor(time / 60) % 60}`.padStart(2, "0");
 		const hour = `${Math.floor(time / 3600)}`.padStart(2, "0");
 		return (
 			<>
-				<Typography variant="h1" style={{ fontSize: '35px' }}>{[hour, min, sec].join(":")}</Typography>
+				<Typography variant="h1" style={{ fontSize: '35px', marginTop: "40px" }}>{[hour, min, sec].join(":")}</Typography>
 				<Box className={classes.labelTime}>
 					{["hr", "min", "sec"].map((unit) => (
 						<Typography key={unit} vairant="overline">
@@ -80,6 +100,7 @@ const Stopwatch = (props) => {
 			</>
 		);
 	};
+
 	const docRef = doc(db, "data", props.user.uid);
 	const handelPlayPause = async () => {
 		setIsActive(!isActive);
@@ -141,6 +162,7 @@ const Stopwatch = (props) => {
 		setLaps(newLaps);
 	};
 	useEffect(() => {
+		console.log("ashagsdfasghdfghasdghas");
 		if (isActive) {
 			intervalRef.current = setTimeout(() => {
 				const t = time + 0.1
@@ -155,13 +177,18 @@ const Stopwatch = (props) => {
 		const pausedtime = localStorage.getItem("pausedtime")
 		const pausedtimeParsed = JSON.parse(pausedtime)
 		setTime(pausedtimeParsed)
+		return () => null
 	}, []);
 
 	const classes = useStyle();
+
 	return (
 		<div style={{ marginTop: '10%', }}>
+
 			<Grid m={2} className={classes.root}   >
-				<Grid item>{formatTime()}</Grid>
+
+				<Grid item> {formatTime()}  </Grid>
+
 				<Grid item  >
 					<ControlButtons
 						args={{
@@ -174,11 +201,18 @@ const Stopwatch = (props) => {
 						}}
 					/>
 				</Grid>
-				<Grid item style={{ color: 'aquamarine' }}>{laps.lapsList.length > 0 && <Laps laps={laps} />}</Grid>
+
+				<Grid item style={{ color: 'aquamarine' }}>
+					{laps.lapsList.length > 0 && <Laps laps={laps} />}
+				</Grid>
+
 			</Grid>
+
 			<div style={{ marginTop: '35px', marginLeft: '75px' }}>
-				<input placeholder="Online" onChange={onChange} style={{ fontSize: '20px', width: '60%', backgroundColor: 'black', color: 'white', border: '0px' }} />
+
+				<input placeholder="Online" onChange={onChange} style={{ fontSize: '20px', width: '60%', marginTop: "30px", backgroundColor: 'black', color: 'white', border: '0px' }} />
 			</div>
+
 		</div>
 	);
 };
@@ -186,8 +220,10 @@ const Stopwatch = (props) => {
 const ControlButtons = ({
 	args: { time, isActive, handelPlayPause, handelLaps, handelReset, classes }
 }) => {
+
 	return (
 		< div style={{ display: 'flex', }}>
+
 			{/* play or pause stopwatch */}
 			<Tooltip title={isActive ? "Pause" : "Play"} style={{ backgroundColor: "white" }}>
 				<IconButton onClick={() => handelPlayPause()} >
@@ -199,6 +235,7 @@ const ControlButtons = ({
 					}
 				</IconButton>
 			</Tooltip>
+
 		</ div>
 	);
 };
@@ -220,6 +257,7 @@ const Laps = ({ laps }) => {
 	};
 	const formattedRow = (lap, index) => {
 		return (
+
 			<TableRow hover="true" key={index}>
 				<TableCell className={classes.lapCell}>
 					<Typography className={classes.lapCellTypo}>

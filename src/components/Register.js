@@ -23,19 +23,12 @@ function Register() {
     if (!name) alert("Please enter name");
     // else if(!validateEmail) alert("please enter valid email")
     else if (password != confirmPassword) alert("password mismatched")
-    else { registerWithEmailAndPassword(name, email, password); }
+    else { registerWithEmailAndPassword(name, email, password, navigate); }
   };
   function validateEmail(email) {
     var re = /\S+@\S+\.\S+/;
     return re.test(email);
   }
-
-  useEffect(() => {
-    if (loading) return;
-    if (user?.accessToken) {
-      navigate("/dashboard");
-    }
-  }, [user, loading]);
 
   return (
     <div className="register">
